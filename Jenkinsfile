@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node20'
+        nodejs 'Node20' // Make sure this matches Jenkins tool name
     }
 
     stages {
@@ -14,20 +14,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install --prefix backend'
-                bat 'npm install --prefix frontend'
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                bat 'npm run build --prefix frontend'
+                bat 'npm install --prefix todo-app/backend'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t todo-app .'
+                bat 'docker build -t todo-app ./todo-app'
             }
         }
 
