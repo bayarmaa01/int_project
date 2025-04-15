@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node18' // Make sure Node18 is properly set in Jenkins tools
+        nodejs 'Node18' // Make sure this matches the name in Jenkins Global Tool Configuration
     }
 
     stages {
@@ -48,8 +48,22 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                bat 'docker run -d -p 8080:3000 todo-app'
+                // Stop and remove any existing container to prevent port conflict
+                bat 'docker rm -f todo-app || exit 0'
+                bat 'docker run -d --name todo-app -p 8080:3000 todo-app'
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline execution finished.'
+        }
+        failure {
+            echo '❌ Build failed. Check logs for details.'
+        }
+        success {
+            echo '✅ Build and deployment successful!'
         }
     }
 }
