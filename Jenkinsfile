@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node20' // Make sure this matches Jenkins tool name
+        nodejs 'Node20'
     }
 
     stages {
@@ -14,7 +14,9 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install --prefix todo-app/backend'
+                dir('todo-app/backend') {
+                    bat 'npm install'
+                }
             }
         }
 
