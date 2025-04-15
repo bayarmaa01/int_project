@@ -2,10 +2,15 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node20' // Ensure this Node.js version is configured in Jenkins tools
+        nodejs 'Node20' // Make sure Node 20 is configured in Jenkins tools
+    }
+
+    environment {
+        IMAGE_NAME = 'bayarmaa/todo-app'
     }
 
     stages {
+
         stage('Clone Repo') {
             steps {
                 git branch: 'main', url: 'https://github.com/bayarmaa01/int_project.git'
@@ -20,9 +25,17 @@ pipeline {
             }
         }
 
+        stage('Install Frontend Dependencies') {
+            steps {
+                dir('todo-app/frontend') {
+                    bat 'npm install'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t todo-app ./todo-app'
+                bat 'docker build -t %IMAGE_NAME% ./todo-app'
             }
         }
 
@@ -30,8 +43,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', 'dockerhub-creds') {
-                        bat 'docker tag todo-app bayarmaa/todo-app'
-                        bat 'docker push bayarmaa/todo-app'
+                        bat 'docker push %IMAGE_NAME%'
                     }
                 }
             }
@@ -39,17 +51,17 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                bat 'docker run -d -p 8080:3000 todo-app'
+                bat 'docker run -d -p 8080:3000 %IMAGE_NAME%'
             }
         }
     }
 
     post {
+        success {
+            echo '✅ Build and Deployment Successful!'
+        }
         failure {
             echo '❌ Build failed. Check logs for details.'
-        }
-        success {
-            echo '✅ Build and deployment successful!'
         }
     }
 }
