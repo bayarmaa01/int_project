@@ -1,9 +1,8 @@
 pipeline {
     agent any
 
-    environment {
-        NODE_HOME = tool name: 'NodeJS 18', type: 'NodeJSInstallation'
-        PATH = "${env.NODE_HOME}/bin:${env.PATH}"
+    tools {
+        nodejs 'Node18' // Must match exactly the name you set in Jenkins tools config
     }
 
     stages {
@@ -41,8 +40,8 @@ pipeline {
         stage('Push to DockerHub') {
             steps {
                 withDockerRegistry([credentialsId: 'dockerhub-creds', url: '']) {
-                    sh 'docker tag todo-app yourusername/todo-app'
-                    sh 'docker push yourusername/todo-app'
+                    sh 'docker tag todo-app bayarmaa/todo-app'
+                    sh 'docker push bayarmaa/todo-app'
                 }
             }
         }
