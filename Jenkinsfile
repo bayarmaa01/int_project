@@ -14,13 +14,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install --prefix todo-app/backend'
+                bat 'npm install --prefix backend'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t todo-app ./todo-app'
+                bat 'docker build -t todo-app .'
             }
         }
 
