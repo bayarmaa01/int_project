@@ -5,7 +5,8 @@ FROM node:18
 WORKDIR /app
 
 # Copy and install backend
-COPY backend ./backend
+COPY ../backend ./backend
+
 WORKDIR /app/backend
 RUN npm install
 
