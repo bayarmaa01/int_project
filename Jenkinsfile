@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node20'
+        nodejs 'Node20' // Ensure this Node.js version is configured in Jenkins tools
     }
 
     stages {
@@ -12,23 +12,27 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Backend Dependencies') {
             steps {
-                bat 'npm install --prefix backend'
+                dir('todo-app/backend') {
+                    bat 'npm install'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t todo-app .'
+                bat 'docker build -t todo-app ./todo-app'
             }
         }
 
         stage('Push to DockerHub') {
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub-creds', url: '']) {
-                    bat 'docker tag todo-app bayarmaa/todo-app'
-                    bat 'docker push bayarmaa/todo-app'
+                script {
+                    docker.withRegistry('', 'dockerhub-creds') {
+                        bat 'docker tag todo-app bayarmaa/todo-app'
+                        bat 'docker push bayarmaa/todo-app'
+                    }
                 }
             }
         }
@@ -43,6 +47,9 @@ pipeline {
     post {
         failure {
             echo '❌ Build failed. Check logs for details.'
+        }
+        success {
+            echo '✅ Build and deployment successful!'
         }
     }
 }
