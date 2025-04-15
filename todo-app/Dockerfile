@@ -2,7 +2,7 @@ FROM node:18
 
 WORKDIR /app
 
-COPY todo-app/backend ./backend
+COPY backend ./backend
 
 
 WORKDIR /app/backend
