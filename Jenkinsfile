@@ -14,9 +14,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir('todo-app/backend') {
-                    bat 'npm install'
-                }
+                bat 'npm install --prefix todo-app/backend'
             }
         }
 
