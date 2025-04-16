@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node20' // Ensure this Node.js version is configured in Jenkins tools
+        nodejs 'Node20' // Make sure Node.js 20 is configured in Jenkins Global Tool Configuration
     }
 
     stages {
@@ -29,7 +29,7 @@ pipeline {
         stage('Push to DockerHub') {
             steps {
                 script {
-                    docker.withRegistry('', 'dockerhub-creds') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds') {
                         bat 'docker tag todo-app bayarmaa/todo-app'
                         bat 'docker push bayarmaa/todo-app'
                     }
