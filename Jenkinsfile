@@ -44,11 +44,18 @@ pipeline {
     }
 
     post {
-        failure {
-            echo '❌ Build failed. Check logs for details.'
-        }
         success {
             echo '✅ Build and deployment successful!'
+            emailext subject: "✅ Jenkins Build Successful",
+                     body: "Hello,\n\nThe Jenkins build and deployment for the ToDo App was successful.",
+                     to: "your-email@gmail.com"
+        }
+
+        failure {
+            echo '❌ Build failed. Check logs for details.'
+            emailext subject: "❌ Jenkins Build Failed",
+                     body: "Hi,\n\nThe Jenkins build failed. Please check the console logs for errors.",
+                     to: "your-email@gmail.com"
         }
     }
 }
