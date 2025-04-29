@@ -36,12 +36,6 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
-            steps {
-                bat 'docker run -d -p 8080:3000 bayarmaa/todo-app:v1'
-            }
-        }
-
         stage('Deploy with Docker Compose') {
             steps {
                 dir('todo-app') {
@@ -51,7 +45,6 @@ pipeline {
             }
         }
     }
-    
 
     post {
         success {
